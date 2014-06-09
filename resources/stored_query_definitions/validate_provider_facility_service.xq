@@ -33,7 +33,10 @@ declare variable $careServicesRequest as item() external;
 	   if (count ($provs1[1]/facilities/facility[@oid = $facility_oid]/service[@oid = $service_oid]) > 0) then $provs1 else ()
 	else $provs1
 
-      return $provs2
+      return if (count($provs2) == 1) then
+	<provider oid='{$provs2[1]/@oid}'/>
+      else 
+	 ()
     }     
   </providerDirectory>
 </CSD>
