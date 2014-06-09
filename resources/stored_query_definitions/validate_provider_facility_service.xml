@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<careServicesFunction xmlns="urn:ihe:iti:csd:2013"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csd="urn:ihe:iti:csd:2013"
+  xsi:schemaLocation="urn:ihe:iti:csd:2013 CSD.xsd" xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+  uuid="48095e0e-7760-46bc-8798-c4fa857a878c" content-type="text/xml">
+  <description>
+    Validates a healthcare worker's OID.   If optional facility and service information is provided, validates that the healthcare worker is registered to perform the service at the indicated facility
+  </description>
+  <definition ><xi:include parse='text' href='validate_provider_facility_service.xq'/></definition>
+  <xforms:instance>
+    <careServicesRequest>
+      <id/>
+      <facilities>
+	<facility>
+	  <service/>
+	</facility>
+      </facilities>
+    </careServicesRequest>
+  </xforms:instance>
+  <xforms:bind nodeset="id" type="csd:uniqueID"/>
+  <xforms:bind nodeset="facilities/facility" type="csd:uniqueID"/>
+  <xforms:bind nodeset="facilities/facility/service" type="csd:uniqueID"/>
+</careServicesFunction>
