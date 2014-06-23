@@ -13,14 +13,12 @@
   <xforms:instance>
     <careServicesRequest>
       <id/>
-      <facilities>
 	<facility>
 	  <service/>
 	</facility>
-      </facilities>
     </careServicesRequest>
   </xforms:instance>
   <xforms:bind nodeset="id" type="csd:uniqueID"/>
-  <xforms:bind nodeset="facilities/facility" type="csd:uniqueID"/>
-  <xforms:bind nodeset="facilities/facility/service" type="csd:uniqueID"/>
+  <xforms:bind nodeset="facility" type="csd:uniqueID"/>
+  <xforms:bind nodeset="facility/service" type="csd:uniqueID"/>
 </careServicesFunction>
