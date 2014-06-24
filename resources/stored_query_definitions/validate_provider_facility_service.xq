@@ -25,12 +25,12 @@ declare variable $careServicesRequest as item() external;
 
       let $provs1 := if (exists($facility_oid) and count($provs0) = 1)
 	then 
-	   if (count ($provs0[1]/facility[@oid = $facility_oid]) > 0) then $provs0 else ()
+	   if (count ($provs0[1]/facilities/facility[@oid = $facility_oid]) > 0) then $provs0 else ()
 	else $provs0
 
       let $provs2 := if (exists($service_oid) and count($provs1) = 1)
 	then 
-	   if (count ($provs1[1]/facility[@oid = $facility_oid]/service[@oid = $service_oid]) > 0) then $provs1 else ()
+	   if (count ($provs1[1]/facilities/facility[@oid = $facility_oid]/service[@oid = $service_oid]) > 0) then $provs1 else ()
 	else $provs1
 
       return if (count($provs2) = 1) then
