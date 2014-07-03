@@ -1,4 +1,4 @@
-import module namespace csd = "urn:ihe:iti:csd:2013" at "../repo/csd_base_library.xqm";
+import module namespace csd_bl = "https://github.com/openhie/openinfoman/csd_bl";
 declare default element  namespace   "urn:ihe:iti:csd:2013";
 declare variable $careServicesRequest as item() external;
 
@@ -20,7 +20,7 @@ declare variable $careServicesRequest as item() external;
 	  
       (: if no provider id was provided, then this is invalid. :)
       let $provs0 := if (exists($careServicesRequest/id))
-	then csd:filter_by_primary_id(/CSD/providerDirectory/*,$careServicesRequest/id)
+	then csd_bl:filter_by_primary_id(/CSD/providerDirectory/*,$careServicesRequest/id)
       else ()   
 
       let $provs1 := if (exists($facility_oid) and count($provs0) == 1)
