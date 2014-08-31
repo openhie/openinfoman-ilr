@@ -19,7 +19,7 @@ declare variable $careServicesRequest as item() external;
       let $service_oid := $careServicesRequest/facility[1]/service[1]/@oid
 	  
       (: if no provider id was provided, then this is invalid. :)
-      let $provs0 := if (exists($careServicesRequest/id))
+      let $provs0 := if (exists($careServicesRequest/id/@oid))
 	then csd_bl:filter_by_primary_id(/CSD/providerDirectory/*,$careServicesRequest/id)
       else ()   
 
