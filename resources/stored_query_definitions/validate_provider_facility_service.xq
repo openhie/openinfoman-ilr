@@ -15,26 +15,26 @@ declare variable $careServicesRequest as item() external;
   <facilityDirectory/>
   <providerDirectory>
     {
-      let $facility_oid := $careServicesRequest/facility[1]/@oid
-      let $service_oid := $careServicesRequest/facility[1]/service[1]/@oid
+      let $facility_entityID := $careServicesRequest/facility[1]/@entityID
+      let $service_entityID := $careServicesRequest/facility[1]/service[1]/@entityID
 	  
       (: if no provider id was provided, then this is invalid. :)
       let $provs0 := if (exists($careServicesRequest/id))
 	then csd_bl:filter_by_primary_id(/CSD/providerDirectory/*,$careServicesRequest/id)
       else ()   
 
-      let $provs1 := if (exists($facility_oid) and count($provs0) = 1)
+      let $provs1 := if (exists($facility_entityID) and count($provs0) = 1)
 	then 
-	   if (count ($provs0[1]/facilities/facility[@oid = $facility_oid]) > 0) then $provs0 else ()
+	   if (count ($provs0[1]/facilities/facility[@entityID = $facility_entityID]) > 0) then $provs0 else ()
 	else $provs0
 
-      let $provs2 := if (exists($service_oid) and count($provs1) = 1)
+      let $provs2 := if (exists($service_entityID) and count($provs1) = 1)
 	then 
-	   if (count ($provs1[1]/facilities/facility[@oid = $facility_oid]/service[@oid = $service_oid]) > 0) then $provs1 else ()
+	   if (count ($provs1[1]/facilities/facility[upper-case(@entityID) = upper-case($facility_entityID)]/service[upper-case(@entityID) = upper-case($service_entityID)]) > 0) then $provs1 else ()
 	else $provs1
 
       return if (count($provs2) = 1) then
-	<provider oid='{$provs2[1]/@oid}'/>
+	<provider entityID='{$provs2[1]/@entityID}'/>
       else 
 	 ()
     }     
