@@ -1,10 +1,10 @@
-openinfoman-ilr (1.0.1~utopic) utopic; urgency=medium
+openinfoman-ilr (1.0.1~trusty) trusty; urgency=medium
 
   * Release Version 1.0.1
 
- -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 13:51:28 +0000
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 13:51:27 +0000
 
-openinfoman-ilr (1.0.0~utopic) utopic; urgency=low
+openinfoman-ilr (1.0.0~trusty) trusty; urgency=low
 
   [Carl Leitner <litlfred@ibiblio.org>]
   * Initial Build
