@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 7)
 Homepage: https://github.com/openhie/openinfoman
 
 
-Package: openinfoman
+Package: openinfoman-ilr
 Architecture: all
 Depends: openinfoman (>= 1.0.11)
 Recommends: 
