@@ -15,12 +15,12 @@ declare variable $careServicesRequest as item() external;
   <facilityDirectory/>
   <providerDirectory>
     {
-      let $facility_entityID := $careServicesRequest/facility[1]/@entityID
-      let $service_entityID := $careServicesRequest/facility[1]/service[1]/@entityID
+      let $facility_entityID := $careServicesRequest/requestParams/facility[1]/@entityID
+      let $service_entityID := $careServicesRequest/requestParams/facility[1]/service[1]/@entityID
 	  
       (: if no provider id was provided, then this is invalid. :)
-      let $provs0 := if (exists($careServicesRequest/id/@entityID))
-	then csd_bl:filter_by_primary_id(/CSD/providerDirectory/*,$careServicesRequest/id)
+      let $provs0 := if (exists($careServicesRequest/requestParams/id/@entityID))
+	then csd_bl:filter_by_primary_id(/CSD/providerDirectory/*,$careServicesRequest/requestParams/id)
       else ()   
 
       let $provs1 := if (exists($facility_entityID) and count($provs0) = 1)
