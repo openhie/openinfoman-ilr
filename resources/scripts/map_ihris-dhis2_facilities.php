@@ -13,7 +13,7 @@ function show(id,level_message) {
 </script>
 <?php
 mysql_connect("localhost","user","password");
-mysql_select_db("database");
+mysql_select_db("sierraleone");
 $count=0;
 $counter=0;
 if($_SERVER["REQUEST_METHOD"]=="POST") {
@@ -25,7 +25,7 @@ foreach($_POST["dhis2"] as $ihris=>$dhis2) {
 	mysql_query("insert into `dhis2-ihris` (ihris,dhis2) values ('$ihris','$dhis2')") or die(mysql_error());
 }
 echo "<b>Data is saved successfully</b><br>";
-echo "<a href='merge_facilities.php'>Return</a>";
+echo "<a href='map_ihris-dhis2_facilities.php'>Return</a>";
 }
 else {
 $max_rows=100;
@@ -54,26 +54,26 @@ echo "<center><u><b><font color='green'>Page Number ".($page+1)."/".($total_page
 echo "<table><tr>";
 if($page>0)
 {
-echo"<td><a href='merge_facilities.php?page=0&total_page=$total_page&count=$count' title='First Page'> |< First &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=0&total_page=$total_page&count=$count' title='First Page'> |< First &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 $next=$page+1;
 if($page<$total_page)
 {
-echo"<td><a href='merge_facilities.php?page=$next&total_page=$total_page&count=$count' title='Next Page'> Next >> &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=$next&total_page=$total_page&count=$count' title='Next Page'> Next >> &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 $prev=$page-1;
 if ($page>0)
 {
-echo"<td><a href='merge_facilities.php?page=$prev&total_page=$total_page&count=$count' title='Previous Page'> << Previous &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=$prev&total_page=$total_page&count=$count' title='Previous Page'> << Previous &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 if($page<$total_page)
 {
-echo"<td><a href='merge_facilities.php?page=$total_page&total_page=$total_page&count=$count' title='Last Page'> Last >| &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=$total_page&total_page=$total_page&count=$count' title='Last Page'> Last >| &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 ##########   end displaying navigations ##################
 echo "<td align='center'><input type='submit' name='submited' value='Save'></td></tr>";
 echo "</table>";
-echo "<table border='1' cellspacing='0'><tr><th>SN</th><th>iHRIS Facility</th><th>DHIS2 Exact Match</th><th>DHIS2 Close Match</th></tr>";
+echo "<table border='1' cellspacing='0'><tr><th>SN</th><th>iHRIS Facility</th><th>DHIS2 Exact Match</th><th>DHIS2 Manually Matched</th><th>DHIS2 Close Match</th></tr>";
 while($row=mysql_fetch_array($results)) {
 	$strs=explode(" ",$row["name"]);
 	foreach($strs as $k=>$str)
@@ -85,6 +85,9 @@ while($row=mysql_fetch_array($results)) {
 	$closest=array();
 	$results1=mysql_query("select * from dhis2_facilities");
 	while($row1=mysql_fetch_array($results1)) {
+		$mapped=mysql_query("select dhis2 from `dhis2-ihris` where dhis2='$row1[id]'");
+		if(mysql_num_rows($mapped)>0)
+		continue;
 		$strs=explode(" ",$row1["primary_name"]);
 		foreach($strs as $k=>$str)
 			if($str=="")
@@ -137,16 +140,25 @@ while($row=mysql_fetch_array($results)) {
 		
 	}
 	echo "<tr><td>$count</td><td><input type='hidden' name=ihris[".$row["id"]."] value=".$row["id"].">".$row["name"]."</td>";
+	$dhis2_manually_mapped_name="";
+	list($dhis2_manually_mapped_id)=mysql_fetch_array(mysql_query("select dhis2 from `dhis2-ihris` where ihris='$row[id]' and dhis2!='0'"));
+	if($dhis2_manually_mapped_id)
+	list($dhis2_manually_mapped_name)=mysql_fetch_array(mysql_query("select primary_name from dhis2_facilities where id='$dhis2_manually_mapped_id'"));
 	if ($shortest == 0) {
 		$counter++;
    	echo "<td>";
    	foreach($closest as $lev=>$closest_pull)
    	foreach($closest_pull as $id=>$close)
    	echo $close."<br>";
-   	echo "</td><td></td>";
+   	echo "</td><td></td><td></td>";
 	}
 	else {
-   	echo "<td></td><td>";
+		echo "<td></td>";
+		if($dhis2_manually_mapped_name)
+		echo "<td>$dhis2_manually_mapped_name</td>";
+		else
+		echo "<td></td>";
+   	echo "<td>";
    	ksort($closest);
    	$match_index=0;
    	foreach($closest as $lev=>$closest_pull) {
@@ -163,6 +175,11 @@ while($row=mysql_fetch_array($results)) {
    		echo "</div></font>";
    		$match_index++;
    	}
+	$data=mysql_query("select * from `dhis2-ihris` where ihris='$row[id]' and dhis2='0'");
+   	if(mysql_num_rows($data)>0)
+   	echo "<input type='radio' name='dhis2[".$row["id"]."]' value='0' checked>No Match<br>";
+   	else
+   	echo "<input type='radio' name='dhis2[".$row["id"]."]' value='0'>No Match<br>";
    	echo "</td></tr>";
 	}
 }
@@ -171,21 +188,21 @@ while($row=mysql_fetch_array($results)) {
 echo "</table><table><tr>";
 if($page>0)
 {
-echo"<td><a href='merge_facilities.php?page=0&total_page=$total_page&count=$count' title='First Page'> |< First &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=0&total_page=$total_page&count=$count' title='First Page'> |< First &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 $next=$page+1;
 if($page<$total_page)
 {
-echo"<td><a href='merge_facilities.php?page=$next&total_page=$total_page&count=$count' title='Next Page'> Next >> &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=$next&total_page=$total_page&count=$count' title='Next Page'> Next >> &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 $prev=$page-1;
 if ($page>0)
 {
-echo"<td><a href='merge_facilities.php?page=$prev&total_page=$total_page&count=$count' title='Previous Page'> << Previous &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=$prev&total_page=$total_page&count=$count' title='Previous Page'> << Previous &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 if($page<$total_page)
 {
-echo"<td><a href='merge_facilities.php?page=$total_page&total_page=$total_page&count=$count' title='Last Page'> Last >| &nbsp;</a> &nbsp; &nbsp;</td>";
+echo"<td><a href='map_ihris-dhis2_facilities.php?page=$total_page&total_page=$total_page&count=$count' title='Last Page'> Last >| &nbsp;</a> &nbsp; &nbsp;</td>";
 }
 ##########   end displaying navigations ##################
 echo "<td align='center'><input type='submit' name='submited' value='Save'></td></tr>";
