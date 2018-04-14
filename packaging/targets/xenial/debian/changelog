@@ -1,3 +1,17 @@
+openinfoman-ilr (1.2.2~xenial) xenial; urgency=medium
+
+  * Release Version 1.2.2
+    -d83cc6a Packaging for ubuntu 16.04
+    --https://github.com/openhie/openinfoman-ilr/commmit/d83cc6a
+    -c74a1fe Packaging for 16.04
+    --https://github.com/openhie/openinfoman-ilr/commmit/c74a1fe
+    -b039e8e Renaming script
+    --https://github.com/openhie/openinfoman-ilr/commmit/b039e8e
+    -790bcf9 Adding a script to map iHRIS and DHIS2 facilities
+    --https://github.com/openhie/openinfoman-ilr/commmit/790bcf9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 14 Apr 2018 08:37:30 +0000
+
 openinfoman-ilr (1.2.1~trusty) trusty; urgency=medium
 
   * Release Version 1.2.1
